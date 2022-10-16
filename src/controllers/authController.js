@@ -52,7 +52,6 @@ export async function signIn(req, res) {
       email,
     ]);
 
-    // Valida se o usuário existe e se a senha é correta
     if (user.rows.length === 0) {
       return res.sendStatus(401);
     }

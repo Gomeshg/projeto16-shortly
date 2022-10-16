@@ -5,6 +5,7 @@ import {
   read,
   redirect,
   remove,
+  list,
 } from "../controllers/urlController.js";
 
 const urlRouter = Router();
@@ -12,6 +13,7 @@ const urlRouter = Router();
 urlRouter.post("/urls/shorten", privateRoute, insert);
 urlRouter.get("/urls/:id", read);
 urlRouter.get("/urls/open/:shortUrl", redirect);
+urlRouter.get("/users/me", privateRoute, list);
 urlRouter.delete("/urls/:id", privateRoute, remove);
 
 export default urlRouter;

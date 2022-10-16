@@ -93,4 +93,31 @@ async function remove(req, res) {
     return res.status(500).send(e.message);
   }
 }
-export { insert, read, redirect, remove };
+
+async function list(req, res) {
+  const user = res.locals.user;
+
+  try {
+    const visitCount = await connection.query(
+      "SELECT sum(views) FROM urls WHERE user_id=$1;",
+      [user.id]
+    );
+
+    const urls = await connection.query(
+      `SELECT id, short_url as "shortUrl", url, views as "visitCount" FROM urls WHERE user_id=$1;`,
+      [user.id]
+    );
+
+    const body = {
+      id: user.id,
+      name: user.name,
+      visitCount: Number(visitCount.rows[0].sum),
+      shortenedUrls: urls.rows,
+    };
+
+    return res.status(200).send(body);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+}
+export { insert, read, redirect, remove, list };

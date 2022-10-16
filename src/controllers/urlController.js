@@ -58,6 +58,13 @@ async function redirect(req, res) {
       return res.sendStatus(404);
     }
 
+    const update_views = Number(url.rows[0].views) + 1;
+
+    await connection.query("UPDATE urls SET views=$1 WHERE short_url=$2;", [
+      update_views,
+      shortUrl,
+    ]);
+
     return res.redirect(url.rows[0].url);
   } catch (e) {
     return res.status(500).send(e.message);

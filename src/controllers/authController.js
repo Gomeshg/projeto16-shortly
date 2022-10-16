@@ -3,7 +3,7 @@ import { stripHtml } from "string-strip-html";
 import { v4 as uuid } from "uuid";
 
 import connection from "../database/db.js";
-import { signupSchema, signinSchema } from "../schemas/userSchema.js";
+import { signupSchema, signinSchema } from "../schemas/authSchema.js";
 
 export async function signUp(req, res) {
   const { name, email, password } = req.body;

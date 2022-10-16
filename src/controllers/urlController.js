@@ -28,4 +28,21 @@ async function insert(req, res) {
   }
 }
 
-export { insert };
+async function read(req, res) {
+  const { id } = req.params;
+  try {
+    const url = await connection.query(
+      "SELECT id, short_url, url FROM urls WHERE id=$1;",
+      [id]
+    );
+    if (url.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    return res.status(200).send(url.rows[0]);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+}
+
+export { insert, read };

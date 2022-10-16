@@ -45,4 +45,22 @@ async function read(req, res) {
   }
 }
 
-export { insert, read };
+async function redirect(req, res) {
+  const { shortUrl } = req.params;
+
+  try {
+    const url = await connection.query(
+      "SELECT * FROM urls WHERE short_url=$1;",
+      [shortUrl]
+    );
+
+    if (url.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    return res.redirect(url.rows[0].url);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+}
+export { insert, read, redirect };

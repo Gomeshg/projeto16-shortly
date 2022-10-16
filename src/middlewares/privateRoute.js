@@ -16,5 +16,12 @@ export default async function privateRoute(req, res, next) {
     return res.sendStatus(401);
   }
 
+  const user = await connection.query(
+    "SELECT id, name FROM users WHERE id=$1;",
+    [session.rows[0].user_id]
+  );
+
+  res.locals.user = user.rows[0];
+
   next();
 }

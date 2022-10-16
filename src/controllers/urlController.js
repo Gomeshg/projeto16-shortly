@@ -120,4 +120,16 @@ async function list(req, res) {
     return res.status(500).send(e.message);
   }
 }
-export { insert, read, redirect, remove, list };
+
+async function listAll(req, res) {
+  try {
+    const urls =
+      await connection.query(`SELECT users.id, users.name, COUNT(urls.id) AS "linksCount", SUM(views) AS "visitCount" FROM urls JOIN users ON urls.user_id=users.id GROUP BY urls.user_id, users.id ORDER BY "visitCount" DESC LIMIT 10;
+    `);
+
+    return res.status(200).send(urls.rows);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+}
+export { insert, read, redirect, remove, list, listAll };

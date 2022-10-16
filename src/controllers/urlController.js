@@ -63,4 +63,27 @@ async function redirect(req, res) {
     return res.status(500).send(e.message);
   }
 }
-export { insert, read, redirect };
+
+async function remove(req, res) {
+  const { id } = req.params;
+  const user = res.locals.user;
+
+  try {
+    const url = await connection.query("SELECT * FROM urls WHERE id=$1;", [id]);
+
+    if (url.rows.length === 0) {
+      return res.sendStatus(404);
+    }
+
+    if (user.id !== url.rows[0].user_id) {
+      return res.sendStatus(401);
+    }
+
+    await connection.query("DELETE FROM urls WHERE id=$1;", [id]);
+
+    return res.sendStatus(204);
+  } catch (e) {
+    return res.status(500).send(e.message);
+  }
+}
+export { insert, read, redirect, remove };
